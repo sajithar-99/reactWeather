@@ -24,7 +24,7 @@ var WeatherMessage = ({temp,city}) =>{
 //es6 destructuring in arguments
   return(
     <div>
-      <h3>Its {temp} degress in {city}</h3>
+      <h3 className= "text-center">Its {temp} degress in {city}</h3>
     </div>
   );
 }

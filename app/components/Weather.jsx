@@ -2,6 +2,7 @@ var React = require('react');
 var WeatherForm = require('WeatherForm');
 var WeatherMessage = require('WeatherMessage');
 var openWeatherMap = require('openWeatherMap');
+var ErrorModal = require('ErrorModal');
 
 var Weather = React.createClass({
   getInitialState: function() {
@@ -13,8 +14,11 @@ var Weather = React.createClass({
   handleNewCity: function(updates) {
     var that = this;
     var loc = updates.city;
-    
-    this.setState({isLoading:true});
+
+    this.setState({
+      isLoading:true,
+      errorMessage:undefined
+    });
 
     openWeatherMap.getTemp(loc).then(function(temp) {
       //  updates.city=city;
@@ -22,10 +26,13 @@ var Weather = React.createClass({
       that.setState({isLoading:false});
       that.setState(updates);
 
-    }, function(errorMessage) {
-      that.setState({isLoading:false});
-      alert('E.R.R.O.R : NO VALID RESPONSE'+ errorMessage);
-    })
+    }, function(err) {
+      that.setState({
+        isLoading:false,
+        errorMessage:err.message
+      });
+  //    alert('E.R.R.O.R : NO VALID RESPONSE'+ errorMessage);
+});
 
     //    updates.temp = 23;
     //  alert(updates.city);
@@ -33,25 +40,33 @@ var Weather = React.createClass({
     //this.setState(updates);
   },
   render: function() {
-  var {isLoading,temp, city} = this.state; //es6 destructuring
+  var {isLoading,temp, city,errorMessage} = this.state; //es6 destructuring
 
   function renderMessage()
    {
      if(isLoading){
-       return <h3>Fetching....</h3>;
+       return <h3 className="text-center">Fetching....</h3>;
      }
    else if (temp && city) {
      return <WeatherMessage city={city} temp ={temp}/>;
    }
  }
 
+function renderError(){
+  if(typeof errorMessage === "string"){
+    return(
+      <ErrorModal message={errorMessage}/>
+    );
+  }
+}
+
     return (
       <div>
+         <h1 className="text-center page-title">Get Weather</h1>
         <WeatherForm onNewCity={this.handleNewCity}/>
         {renderMessage()}
-        //
-        <h3>
-          Weather-jsx-component</h3>
+        {renderError()}
+
       </div>
 
     );

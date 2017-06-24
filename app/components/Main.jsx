@@ -1,15 +1,18 @@
 var React = require('react');
-var Nav= require('Nav');
+var Nav = require('Nav');
 var Main = React.createClass({
-  render:function(){
+  render: function() {
 
     return (
       <div>
         <Nav/>
-        <h2>Hey I am Main</h2>
-        {this.props.children}
+        <div className="row">
+          <div className="coloums medium-6 large-4 small-centered">
+            {this.props.children}
+          </div>
         </div>
-      );
+      </div>
+    );
 
   }
 });
